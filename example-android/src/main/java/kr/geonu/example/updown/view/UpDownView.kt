@@ -12,6 +12,9 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.PublishSubject
 
 class UpDownView : LinearLayout, kr.geonu.mvc.ViewMixin<UpDown> {
+    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    }
+
     class ClickUp : kr.geonu.mvc.Event
     class ClickDown : kr.geonu.mvc.Event
     class ClickDelayedReset : kr.geonu.mvc.Event
@@ -36,14 +39,5 @@ class UpDownView : LinearLayout, kr.geonu.mvc.ViewMixin<UpDown> {
         downButton.setOnClickListener { eventStream.onNext(ClickDown()) }
 
         return eventStream
-    }
-
-    constructor(context: Context) : super(context) {
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
     }
 }

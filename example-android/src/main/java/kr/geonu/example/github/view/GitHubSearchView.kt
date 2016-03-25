@@ -21,6 +21,9 @@ import rx.Observable
 import rx.lang.kotlin.PublishSubject
 
 class GitHubSearchView : LinearLayout, ViewMixin<GitHubSearch> {
+    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    }
+
     class ClickItem(val item: Repo, val index: Int) : Event
     class QueryChange(val query: String) : Event
 
@@ -109,13 +112,4 @@ class GitHubSearchView : LinearLayout, ViewMixin<GitHubSearch> {
 
 
     inner class ViewHolder(itemView: View, val nameTextView: TextView, val urlTextView: TextView) : RecyclerView.ViewHolder(itemView)
-
-    constructor(context: Context) : super(context) {
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-    }
 }

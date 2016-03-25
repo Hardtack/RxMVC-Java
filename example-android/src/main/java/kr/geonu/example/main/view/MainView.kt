@@ -18,6 +18,9 @@ import rx.Observable
 import rx.lang.kotlin.PublishSubject
 
 class MainView : RelativeLayout, ViewMixin<ActivityList> {
+    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    }
+
     class ClickItem(val item: Pair<String, Class<*>>, val index: Int) : Event
 
     override fun observeModel(modelStream: Observable<ActivityList>): Observable<Event> {
@@ -51,13 +54,4 @@ class MainView : RelativeLayout, ViewMixin<ActivityList> {
 
 
     inner class ViewHolder(itemView: View, val titleTextView: TextView) : RecyclerView.ViewHolder(itemView)
-
-    constructor(context: Context) : super(context) {
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-    }
 }
