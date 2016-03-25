@@ -33,7 +33,7 @@ class GitHubSearchController : ControllerMixin<GitHubSearch> {
                         // Filter QueryChange event and subscribe with throttling
                         .mergeWith(
                                 eventStream.filter { x -> x is GitHubSearchView.QueryChange }
-                                        .throttleLast(1000, TimeUnit.MILLISECONDS)
+                                        .throttleLast(300, TimeUnit.MILLISECONDS)
                                         .map { e -> Search((e as GitHubSearchView.QueryChange).query) }
                         )
                         // Handle asynchronous events
