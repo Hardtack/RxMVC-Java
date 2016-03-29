@@ -1,6 +1,8 @@
 package kr.geonu.example.github.model
 
-data class Repo(val name: String, val url: String)
+import com.google.gson.annotations.SerializedName
+
+data class Repo(val name: String, val url: String, @SerializedName("svn_url") val svnUrl: String)
 
 data class SearchResult(val items: List<Repo>)
 

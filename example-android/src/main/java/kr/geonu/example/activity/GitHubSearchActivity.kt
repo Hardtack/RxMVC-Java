@@ -15,7 +15,7 @@ class GitHubSearchActivity : RxAppCompatActivity() {
         // Get a view from content view
         val view = findViewById(R.id.layout_content) as GitHubSearchView
         // Make a controller
-        val controller = GitHubSearchController()
+        val controller = GitHubSearchController(this)
         // Start a MVC chain
         AndroidMVC.combine(view, controller, this)
     }

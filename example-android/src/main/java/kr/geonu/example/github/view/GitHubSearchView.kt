@@ -2,6 +2,7 @@ package kr.geonu.example.github.view
 
 import android.content.Context
 import android.support.design.widget.TextInputEditText
+import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
@@ -99,17 +100,18 @@ class GitHubSearchView : LinearLayout, ViewMixin<GitHubSearch> {
         recyclerView.rxBind(itemsStream, { parent, position, item ->
             val view = LayoutInflater.from(context).inflate(R.layout.itemview_repo, parent, false)
             ViewHolder(view,
+                    view.findViewById(R.id.cardview_content) as CardView,
                     view.findViewById(R.id.textview_name) as TextView,
                     view.findViewById(R.id.textview_url) as TextView)
         }, { viewHolder, position, item ->
             viewHolder.nameTextView.text = item.name
             viewHolder.urlTextView.text = item.url
-            viewHolder.itemView.setOnClickListener { eventStream.onNext(ClickItem(item, position)) }
+            viewHolder.contentCardView.setOnClickListener { eventStream.onNext(ClickItem(item, position)) }
         })
 
         return eventStream
     }
 
 
-    inner class ViewHolder(itemView: View, val nameTextView: TextView, val urlTextView: TextView) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View, val contentCardView: CardView, val nameTextView: TextView, val urlTextView: TextView) : RecyclerView.ViewHolder(itemView)
 }
