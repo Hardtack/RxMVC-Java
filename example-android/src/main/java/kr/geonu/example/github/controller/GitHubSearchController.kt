@@ -37,7 +37,7 @@ class GitHubSearchController : ControllerMixin<GitHubSearch> {
                                         .map { e -> Search((e as GitHubSearchView.QueryChange).query) }
                         )
                         // Handle asynchronous events
-                        .flatMap { e ->
+                        .switchMap { e ->
                             when (e) {
                                 is Search -> {
                                     e.query.trim().let { query ->
