@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.jakewharton.rxbinding.view.RxView
+import com.jakewharton.rxbinding.widget.RxTextView
 import kr.geonu.example.R
 import kr.geonu.example.updown.model.UpDown
 import rx.Observable
@@ -29,14 +31,17 @@ class UpDownView : LinearLayout, kr.geonu.mvc.ViewMixin<UpDown> {
         val valueTextView = findViewById(R.id.textview_value) as TextView
 
         // Update view using model stream
-        modelStream.observeOn(AndroidSchedulers.mainThread()).subscribe { state ->
-            valueTextView.text = state.value.toString()
-        }
+        modelStream.map { x -> x.value.toString() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(RxTextView.text(valueTextView))
 
         // Send events to stream
-        delayedResetButton.setOnClickListener { eventStream.onNext(ClickDelayedReset()) }
-        upButton.setOnClickListener { eventStream.onNext(ClickUp()) }
-        downButton.setOnClickListener { eventStream.onNext(ClickDown()) }
+        RxView.clicks(delayedResetButton)
+                .subscribe { eventStream.onNext(ClickDelayedReset()) }
+        RxView.clicks(upButton)
+                .subscribe { eventStream.onNext(ClickUp()) }
+        RxView.clicks(downButton)
+                .subscribe { eventStream.onNext(ClickDown()) }
 
         return eventStream
     }

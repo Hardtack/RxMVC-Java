@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.jakewharton.rxbinding.view.RxView
 import kr.geonu.example.R
 import kr.geonu.example.main.model.ActivityList
 import kr.geonu.mvc.Event
@@ -46,12 +47,16 @@ class MainView : RelativeLayout, ViewMixin<ActivityList> {
         }, { viewHolder, position, item ->
             val (name, activityClass) = item
             viewHolder.titleTextView.text = name
-            viewHolder.itemView.setOnClickListener { eventStream.onNext(ClickItem(item, position)) }
+            RxView.clicks(viewHolder.itemView)
+                    .subscribe { eventStream.onNext(ClickItem(item, position)) }
         })
 
         return eventStream
     }
 
 
-    inner class ViewHolder(itemView: View, val titleTextView: TextView) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(
+            itemView: View,
+            val titleTextView: TextView
+    ) : RecyclerView.ViewHolder(itemView)
 }
