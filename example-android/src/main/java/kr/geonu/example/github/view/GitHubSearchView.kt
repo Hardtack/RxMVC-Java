@@ -105,7 +105,7 @@ class GitHubSearchView : LinearLayout, ViewMixin<GitHubSearch> {
                     view.findViewById(R.id.textview_url) as TextView)
         }, { viewHolder, position, item ->
             viewHolder.nameTextView.text = item.name
-            viewHolder.urlTextView.text = item.url
+            viewHolder.urlTextView.text = item.svnUrl
             viewHolder.contentCardView.setOnClickListener { eventStream.onNext(ClickItem(item, position)) }
         })
 
