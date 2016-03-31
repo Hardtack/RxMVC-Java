@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kr.geonu.example">
+<manifest package="kr.geonu.example"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -18,7 +18,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GitHubSearchActivity"></activity>
+        <activity android:name=".activity.GitHubSearchActivity" />
+        <activity
+            android:name=".activity.PostListActivity"
+            android:label="@string/title_post_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.PostDetailActivity"
+            android:label="@string/title_post_detail"
+            android:parentActivityName=".activity.PostListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="kr.geonu.example.activity.PostListActivity" />
+        </activity>
     </application>
 
 </manifest>

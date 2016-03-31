@@ -3,6 +3,7 @@ package kr.geonu.example.main.controller
 import android.app.Activity
 import android.content.Intent
 import kr.geonu.example.activity.GitHubSearchActivity
+import kr.geonu.example.activity.PostListActivity
 import kr.geonu.example.activity.UpDownActivity
 import kr.geonu.example.main.model.ActivityList
 import kr.geonu.example.main.view.MainView
@@ -22,7 +23,8 @@ class MainController(val activity: Activity) : ControllerMixin<ActivityList> {
         }
         return Observable.just(ActivityList(listOf(
                 Pair("Up & Down", UpDownActivity::class.java),
-                Pair("GitHub Search", GitHubSearchActivity::class.java)
+                Pair("GitHub Search", GitHubSearchActivity::class.java),
+                Pair("Local Blog", PostListActivity::class.java)
         )))
     }
 }
