@@ -1,8 +1,5 @@
 package kr.geonu.example.github.controller
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import kr.geonu.example.github.api.GitHubService
 import kr.geonu.example.github.model.*
 import kr.geonu.example.github.view.GitHubSearchView
@@ -15,7 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import java.util.concurrent.TimeUnit
 
-class GitHubSearchController(val activity: Activity) : ControllerMixin<GitHubSearch> {
+class GitHubSearchController(val delegate: Delegate) : ControllerMixin<GitHubSearch> {
+    /* Delegate */
+    interface Delegate {
+        fun openUrl(url: String)
+    }
+
+    /* Events */
     class Search(val query: String) : Event
 
     object EmptyQuery : Event
@@ -70,8 +73,8 @@ class GitHubSearchController(val activity: Activity) : ControllerMixin<GitHubSea
                         is SearchComplete -> state.copy(loading = false, state = Some(event.items))
                         is SearchError -> state.copy(loading = false, state = Error(event.error))
                         is GitHubSearchView.ClickItem -> {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.item.svnUrl));
-                            activity.startActivity(intent);
+                            // Delegate opens URL.
+                            delegate.openUrl(event.item.svnUrl)
                             state
                         }
                         else -> state

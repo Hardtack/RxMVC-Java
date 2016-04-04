@@ -1,7 +1,5 @@
 package kr.geonu.example.main.controller
 
-import android.app.Activity
-import android.content.Intent
 import kr.geonu.example.activity.GitHubSearchActivity
 import kr.geonu.example.activity.PostListActivity
 import kr.geonu.example.activity.UpDownActivity
@@ -11,13 +9,17 @@ import kr.geonu.mvc.ControllerMixin
 import kr.geonu.mvc.Event
 import rx.Observable
 
-class MainController(val activity: Activity) : ControllerMixin<ActivityList> {
+class MainController(val delegate: Delegate) : ControllerMixin<ActivityList> {
+    /* Delegate */
+    interface Delegate {
+        fun startActivity(activityClass: Class<*>)
+    }
     override fun observeEvent(eventStream: Observable<Event>): Observable<ActivityList> {
         eventStream.subscribe { e ->
             when (e) {
                 is MainView.ClickItem -> {
                     val (name, activityClass) = e.item
-                    activity.startActivity(Intent(activity, activityClass))
+                    delegate.startActivity(activityClass)
                 }
             }
         }

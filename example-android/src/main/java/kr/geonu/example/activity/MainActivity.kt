@@ -1,5 +1,6 @@
 package kr.geonu.example.activity
 
+import android.content.Intent
 import android.os.Bundle
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import kr.geonu.example.R
@@ -7,7 +8,11 @@ import kr.geonu.example.main.controller.MainController
 import kr.geonu.example.main.view.MainView
 import kr.geonu.mvc.android.AndroidMVC
 
-class MainActivity : RxAppCompatActivity() {
+class MainActivity : RxAppCompatActivity(), MainController.Delegate {
+    override fun startActivity(activityClass: Class<*>) {
+        startActivity(Intent(this, activityClass))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
