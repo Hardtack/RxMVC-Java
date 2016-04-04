@@ -15,6 +15,7 @@ class MainController(val delegate: Delegate) : ControllerMixin<ActivityList> {
         fun startActivity(activityClass: Class<*>)
     }
     override fun observeEvent(eventStream: Observable<Event>): Observable<ActivityList> {
+        // Handle event
         eventStream.subscribe { e ->
             when (e) {
                 is MainView.ClickItem -> {
@@ -23,6 +24,7 @@ class MainController(val delegate: Delegate) : ControllerMixin<ActivityList> {
                 }
             }
         }
+        // Return static state
         return Observable.just(ActivityList(listOf(
                 Pair("Up & Down", UpDownActivity::class.java),
                 Pair("GitHub Search", GitHubSearchActivity::class.java),
