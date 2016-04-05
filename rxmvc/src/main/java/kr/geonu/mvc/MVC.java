@@ -1,5 +1,6 @@
 package kr.geonu.mvc;
 
+import org.jetbrains.annotations.NotNull;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subjects.PublishSubject;
@@ -12,7 +13,8 @@ public class MVC {
     /**
      * Combine view with controller.
      */
-    public static <M> void combine(ViewMixin<M> view, ControllerMixin<M> controller) {
+    public static <M> void combine(@NotNull ViewMixin<M> view,
+                                   @NotNull ControllerMixin<M> controller) {
         combine(view, controller, new Observable.Transformer<M, M>() {
             @Override
             public Observable<M> call(Observable<M> observable) {
@@ -30,7 +32,10 @@ public class MVC {
      * Combine view with controller
      * With lifecycles
      */
-    public static <M> void combine(final ViewMixin<M> view, final ControllerMixin<M> controller, final Observable.Transformer<M, M> modelLifecycle, final Observable.Transformer<Event, Event> eventLifecycle) {
+    public static <M> void combine(@NotNull final ViewMixin<M> view,
+                                   @NotNull final ControllerMixin<M> controller,
+                                   @NotNull final Observable.Transformer<M, M> modelLifecycle,
+                                   @NotNull final Observable.Transformer<Event, Event> eventLifecycle) {
         final PublishSubject<Event> eventSubject = PublishSubject.create();
         final ReplaySubject<M> modelSubject = ReplaySubject.create();
 
