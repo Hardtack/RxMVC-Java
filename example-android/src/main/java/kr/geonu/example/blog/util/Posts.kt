@@ -1,5 +1,6 @@
 package kr.geonu.example.blog.util
 
+import com.github.andrewoma.dexx.kollection.ImmutableMap
 import kr.geonu.example.blog.controller.PostController
 import kr.geonu.example.blog.model.common.Post
 import kr.geonu.example.blog.view.PostView
@@ -14,10 +15,10 @@ private val PostVCL = ReferenceCounter({
     val view = PostView()
     val controller = PostController()
 
-    val modelLifecycleSubject = PublishSubject<Map<Int, Post>>()
+    val modelLifecycleSubject = PublishSubject<ImmutableMap<Int, Post>>()
     val eventLifecycleSubject = PublishSubject<Event>()
-    MVC.combine(view, controller, Observable.Transformer<Map<Int, Post>, Map<Int, Post>> { t ->
-        t.subscribe(object: Observer<Map<Int, Post>> {
+    MVC.combine(view, controller, Observable.Transformer<ImmutableMap<Int, Post>, ImmutableMap<Int, Post>> { t ->
+        t.subscribe(object: Observer<ImmutableMap<Int, Post>> {
             override fun onError(e: Throwable?) {
                 modelLifecycleSubject.onError(e)
             }
@@ -26,7 +27,7 @@ private val PostVCL = ReferenceCounter({
                 modelLifecycleSubject.onCompleted()
             }
 
-            override fun onNext(t: Map<Int, Post>?) {
+            override fun onNext(t: ImmutableMap<Int, Post>?) {
                 modelLifecycleSubject.onNext(t)
             }
 

@@ -1,5 +1,6 @@
 package kr.geonu.example.blog.view
 
+import com.github.andrewoma.dexx.kollection.ImmutableMap
 import kr.geonu.example.blog.model.common.Post
 import kr.geonu.mvc.Event
 import kr.geonu.mvc.ViewMixin
@@ -11,7 +12,7 @@ import rx.lang.kotlin.PublishSubject
  * Post view is interface of post entities store.
  * The events are map mutations, and interfaces ares entity observables.
  */
-class PostView : ViewMixin<Map<Int, Post>> {
+class PostView : ViewMixin<ImmutableMap<Int, Post>> {
     /* Events */
     class SetEntity(val id: Int, val entity: Post) : Event
 
@@ -21,7 +22,7 @@ class PostView : ViewMixin<Map<Int, Post>> {
     val eventStream = PublishSubject<Event>()
     val entitiesStream = PublishSubject<Map<Int, Post>>()
 
-    override fun observeModel(modelStream: Observable<Map<Int, Post>>): Observable<Event> {
+    override fun observeModel(modelStream: Observable<ImmutableMap<Int, Post>>): Observable<Event> {
         modelStream.distinctUntilChanged().subscribe(object : Observer<Map<Int, Post>> {
             override fun onCompleted() {
                 entitiesStream.onCompleted()
