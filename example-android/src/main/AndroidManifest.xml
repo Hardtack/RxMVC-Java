@@ -22,7 +22,7 @@
         <activity
             android:name=".activity.PostListActivity"
             android:label="@string/title_post_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.PostDetailActivity"
             android:label="@string/title_post_detail"
