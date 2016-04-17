@@ -8,8 +8,7 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    android:showDividers="middle"
-    tools:context="kr.geonu.example.activity.PostListActivity">
+    android:showDividers="middle">
 
     <!--
     This layout is a two-pane layout for the Posts

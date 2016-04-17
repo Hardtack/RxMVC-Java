@@ -34,12 +34,6 @@ class GitHubSearchView : LinearLayout, ViewMixin<GitHubSearch> {
         val recyclerView = findViewById(R.id.recyclerview_items) as RecyclerView
         val searchTextInput = findViewById(R.id.edittext_search) as TextInputEditText
 
-        // Set layout manager
-        recyclerView.layoutManager = LinearLayoutManager(context).let { layoutManager ->
-            layoutManager.orientation = LinearLayoutManager.VERTICAL
-            layoutManager
-        }
-
         // Bind with data
 
         // Loading
