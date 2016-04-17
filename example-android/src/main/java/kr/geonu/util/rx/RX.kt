@@ -8,46 +8,9 @@ import rx.lang.kotlin.PublishSubject
  * Split stream into first and rest.
  */
 fun <T> Observable<T>.firstAndRest(): Pair<Observable<T>, Observable<T>> {
-    val first = PublishSubject<T>()
-    val rest = PublishSubject<T>()
+    val first = this.take(1)
+    val rest = this.skip(1)
 
-    val shared = this.share()
-    var sentFirst = false
-
-    shared.first().subscribe(object : Observer<T> {
-        override fun onCompleted() {
-            first.onCompleted()
-            if (!sentFirst) {
-                rest.onCompleted()
-            }
-        }
-
-        override fun onError(e: Throwable?) {
-            first.onError(e)
-            rest.onError(e)
-        }
-
-        override fun onNext(t: T) {
-            first.onNext(t)
-            sentFirst = true
-            shared.subscribe(object : Observer<T> {
-                override fun onError(e: Throwable?) {
-                    rest.onError(e)
-                }
-
-                override fun onCompleted() {
-                    if (!rest.hasCompleted()) {
-                        rest.onCompleted()
-                    }
-                }
-
-                override fun onNext(t: T) {
-                    rest.onNext(t)
-                }
-
-            })
-        }
-    })
     return Pair(first, rest)
 }
 
