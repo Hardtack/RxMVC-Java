@@ -1,12 +1,16 @@
 package kr.geonu.mvc;
 
-import org.jetbrains.annotations.NotNull;
 import rx.Observable;
 
 /**
  * Controller is a function that converts event observable to model observable.
  */
 public interface ControllerMixin<M> {
-    @NotNull
-    Observable<M> observeEvent(@NotNull Observable<Event> eventStream);
+    /**
+     * Observe event stream & return model stream
+     *
+     * @param eventStream the stream to be observed, not null
+     * @return the model stream, not null
+     */
+    Observable<M> observeEvent(Observable<Event> eventStream);
 }
