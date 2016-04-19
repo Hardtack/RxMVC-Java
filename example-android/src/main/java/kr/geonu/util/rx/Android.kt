@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import rx.functions.Action1
 
 class RecyclerViewAdapter<T, VH : RecyclerView.ViewHolder>(
         var items: List<T>,
@@ -23,13 +24,18 @@ fun <T, VH : RecyclerView.ViewHolder> RecyclerView.rxBind(
         viewBinder: (viewHolder: VH, position: Int, item: T) -> Unit
 ) {
     val recyclerView = this
-    val (first, rest) = itemsStream.observeOn(AndroidSchedulers.mainThread()).firstAndRest()
-    first.subscribe { items ->
-        val adapter = RecyclerViewAdapter(items, viewHolderCreator, viewBinder)
-        recyclerView.adapter = adapter
-        rest.subscribe { items ->
-            adapter.items = items
-            adapter.notifyDataSetChanged()
+    itemsStream.observeOn(AndroidSchedulers.mainThread()).subscribe(object: Action1<List<T>> {
+        var adapter: RecyclerViewAdapter<T, VH>? = null
+        override fun call(items: List<T>) {
+            val currentAdapter = adapter
+            if (currentAdapter != null) {
+                currentAdapter.items = items
+                currentAdapter.notifyDataSetChanged()
+            } else {
+                adapter = RecyclerViewAdapter(items, viewHolderCreator, viewBinder)
+                recyclerView.adapter = adapter
+            }
         }
-    }
+
+    })
 }

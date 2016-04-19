@@ -1,10 +1,10 @@
 package kr.geonu.mvc;
 
-import org.jetbrains.annotations.NotNull;
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
-import rx.subjects.PublishSubject;
-import rx.subjects.ReplaySubject;
+import rx.functions.Action1;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Utilities for MVC
@@ -12,9 +12,13 @@ import rx.subjects.ReplaySubject;
 public class MVC {
     /**
      * Combine view with controller.
+     *
+     * @param view        the view, not null
+     * @param controller, the controller, not null
+     * @param <M>         model type
      */
-    public static <M> void combine(@NotNull ViewMixin<M> view,
-                                   @NotNull ControllerMixin<M> controller) {
+    public static <M> void combine(ViewMixin<M> view,
+                                   ControllerMixin<M> controller) {
         combine(view, controller, new Observable.Transformer<M, M>() {
             @Override
             public Observable<M> call(Observable<M> observable) {
@@ -31,44 +35,37 @@ public class MVC {
     /**
      * Combine view with controller
      * With lifecycles
+     *
+     * @param view            the view, not null
+     * @param controller,     the controller, not null
+     * @param modelLifecycle, transformer that adds lifecycle to model stream, not null
+     * @param eventLifecycle, transformer that adds lifecycle to event stream, not null
+     * @param <M>             model type
      */
-    public static <M> void combine(@NotNull final ViewMixin<M> view,
-                                   @NotNull final ControllerMixin<M> controller,
-                                   @NotNull final Observable.Transformer<M, M> modelLifecycle,
-                                   @NotNull final Observable.Transformer<Event, Event> eventLifecycle) {
-        final PublishSubject<Event> eventSubject = PublishSubject.create();
-        final ReplaySubject<M> modelSubject = ReplaySubject.create();
+    public static <M> void combine(final ViewMixin<M> view,
+                                   final ControllerMixin<M> controller,
+                                   final Observable.Transformer<M, M> modelLifecycle,
+                                   final Observable.Transformer<Event, Event> eventLifecycle) {
+        // We should pass model stream to view lazily,
+        // so we use subject.
+        final BehaviorSubject<Observable<M>> modelStreamSubject = BehaviorSubject.create();
 
-        // Provide event stream and get model stream
-        Observable<M> modelStream = controller.observeEvent(eventSubject).compose(modelLifecycle);
-        modelStream.subscribe(new Subscriber<M>() {
-            public void onError(Throwable e) {
-                modelSubject.onError(e);
+        // Pass event stream to controller
+        Observable<M> modelStream = controller.observeEvent(Observable.create(new Observable.OnSubscribe<Event>() {
+            @Override
+            public void call(final Subscriber<? super Event> subscriber) {
+                modelStreamSubject.subscribe(new Action1<Observable<M>>() {
+                    @Override
+                    public void call(Observable<M> modelStream) {
+                        final Observable<Event> eventStream = view
+                                .observeModel(modelStream)
+                                .compose(eventLifecycle);
+                        eventStream.subscribe(subscriber);
+                    }
+                });
             }
-
-            public void onNext(M m) {
-                modelSubject.onNext(m);
-            }
-
-            public void onCompleted() {
-                modelSubject.onCompleted();
-            }
-        });
-
-        // Provide model stream and get event stream
-        Observable<Event> eventStream = view.observeModel(modelSubject).compose(eventLifecycle);
-        eventStream.subscribe(new Subscriber<Event>() {
-            public void onError(Throwable e) {
-                eventSubject.onError(e);
-            }
-
-            public void onNext(Event event) {
-                eventSubject.onNext(event);
-            }
-
-            public void onCompleted() {
-                eventSubject.onCompleted();
-            }
-        });
+        })).compose(modelLifecycle);
+        modelStreamSubject.onNext(modelStream);
+        modelStreamSubject.onCompleted();
     }
 }
